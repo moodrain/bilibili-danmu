@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Muyu Bilibili Danmu</title>
+    <link href="https://cdn.bootcss.com/dplayer/1.25.0/DPlayer.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body, html, #player {
+            height: 100%;
+            width: 100%;
+        }
+        body, html {
+            overflow: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        #dm-box {
+            position: fixed;
+            overflow-y: scroll;
+            height: 90%;
+            top: 0;
+            z-index: 99999;
+            left: 70%;
+        }
+        #dm-box p {
+            font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif; font-weight: bold;
+            font-size: 27.5px;
+            color: rgb(255, 255, 255);
+            z-index: 99999;
+            margin-top: 15px;
+            user-select: none;
+            text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+        }
+    </style>
+</head>
+<body>
+<div id="dm-box"></div>
+<div id="player"></div>
+<script src="https://cdn.bootcss.com/dplayer/1.25.0/DPlayer.min.js"></script>
+<script>
+    const dp = new DPlayer({
+        container: document.querySelector('#player'),
+        autoplay: true,
+        video: {
+            url: `{{video}}`,
+        },
+    })
+    let dms = `{{dms}}`
+    let dmArr = []
+    dms = dms.split('\n')
+    for(let i = 0;i < dms.length;i = i + 2) {
+        if(! dms[i + 1]) {
+            break
+        }
+        let info = dms[i + 1].split(',')
+        dmArr.push({
+            text: dms[i],
+            info: {
+                second: info[0],
+                type: info[1],
+                size: info[2],
+                color: info[3],
+                timestamp: info[4],
+                pool: info[5],
+                user: info[6],
+                id: info[7],
+            },
+            send: false,
+        })
+    }
+    let dmBox = document.querySelector('#dm-box')
+    dp.on('timeupdate', () => {
+        let second = dp.video.currentTime
+        let toSend = dmArr.filter(dm => second > dm.info.second && (second - dm.info.second < 1) && ! dm.send)
+        toSend.forEach(d => {
+            d.send = true
+            setTimeout(() => {
+                d.send = false
+            }, 2000)
+            let p = document.createElement('p')
+            p.innerHTML = d.text
+            p.style.color = '#' + Number.parseInt(d.info.color).toString(16)
+            dmBox.append(p)
+            dmBox.scroll({
+                top: 999999999999,
+                left: 0,
+                behavior: 'smooth'
+            })
+        })
+    })
+</script>
+</body>
+</html>

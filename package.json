@@ -1,0 +1,8 @@
+{
+  "name": "bilibili-dm",
+  "version": "1.0.0",
+  "dependencies": {
+    "postman-request": "^2.88.1-postman.18",
+    "xml2js": "^0.4.23"
+  }
+}
