@@ -69,8 +69,8 @@ readline.question('bilibili bangumi url ?\n', bUrl => {
                 })
             })
         } catch (e) {
-            return
             console.log('parse json fail')
+            return
         }
     })
 })
