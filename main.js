@@ -22,7 +22,7 @@ if (!video) {
 }
 
 readline.question('bilibili bangumi url ?\n', bUrl => {
-    let re = new RegExp('https://www.bilibili.com/bangumi/play/ss[0-9]+')
+    let re = new RegExp('https://www.bilibili.com/bangumi/play/(ep|ss)[0-9]+')
     if (!re.test(bUrl)) {
         console.log('not bilibili bangumi url')
         return
